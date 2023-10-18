@@ -1,16 +1,19 @@
 syntax = "proto3";
+
 package http;
+
 option go_package = "pkg/gen/api";
+
 import "http/common.proto";
 
-message RouteMeta{
+message RouteMeta {
   string title = 1;
   string icon = 2;
   string rank = 3;
   repeated string auths = 4;
 }
 
-message RouteItem{
+message RouteItem {
   RouteMeta meta = 1;
   string path = 2;
   string name = 3;
@@ -18,14 +21,14 @@ message RouteItem{
   repeated RouteItem children = 5;
 }
 
-message ResponseRoute{
+message ResponseRoute {
   repeated RouteItem item_list = 1;
 }
 
-message RequestRoute{
+message RequestRoute {
 }
 
-message RoleItem{
+message RoleItem {
   // @gotags: validate:"required"
   uint32 id = 1;
   // @gotags: validate:"required"
@@ -39,14 +42,29 @@ message RoleItem{
   string father_name = 10; // 父角色名
 }
 
-message ResponseRoles{
-//  uint32 page = 1;
-//  uint32 page_size = 2;
-//  uint32 total = 3;
+message ResponseRoles {
+  //  uint32 page = 1;
+  //  uint32 page_size = 2;
+  //  uint32 total = 3;
   repeated RoleItem data_list = 4;
 }
 
-message ResponseGetRole{
+message PageItem {
+  // required
+  string id = 1;
+  string label = 2;
+  bool checked = 3;
+}
+
+message RouteNode {
+  // required
+  string id = 1;
+  string label = 2;
+  repeated PageItem items = 3;
+  repeated RouteNode children = 4;
+}
+
+message ResponseGetRole {
   // @gotags: validate:"required"
   uint32 id = 1;
   // @gotags: validate:"required"
@@ -58,13 +76,44 @@ message ResponseGetRole{
   string remark = 8;// 备注
   uint32 father_id = 9; // 父角色ID
   string father_name = 10; // 父角色名
+  repeated RouteNode route_list = 11;
 }
 
-service admin_service{
+message MenuItem {
+  // required
+  string id = 1;
+  // required
+  string label = 2;
+  repeated MenuPageItem items = 3;
+  repeated MenuItem children = 4;
+}
+
+message HttpMethod {
+  // required
+  string url = 1;
+  // required
+  string method = 2;
+  string note = 3;
+}
+
+message MenuPageItem {
+  // required
+  string id = 1;
+  string label = 2;
+  repeated HttpMethod methods = 3; // 对应http接口
+}
+
+message ResponseGetMenus {
+  repeated MenuItem route_list = 1;
+}
+
+service admin_service {
   // @Summary: 获取路由 @url:/v1/routes/
-  rpc GetRoutes(http.Empty) returns (ResponseRoute);
+  rpc GetRoutes (http.Empty) returns (ResponseRoute);
   // @Summary: 获取角色列表 @url:/v1/roles/
-  rpc GetRoles(http.Empty) returns (ResponseRoles);
+  rpc GetRoles (http.Empty) returns (ResponseRoles);
   // @Summary: 获取角色详情 @url:/v1/role/<uint:id>/
-  rpc GetRole(http.Empty) returns (ResponseGetRole);
+  rpc GetRole (http.Empty) returns (ResponseGetRole);
+  // @Summary: 获取菜单列表 @url:/v1/menus/
+  rpc GetMenus (http.Empty) returns (ResponseGetMenus);
 }

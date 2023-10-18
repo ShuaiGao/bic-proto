@@ -1,17 +1,26 @@
 syntax = "proto3";
+
 package http;
+
 option go_package = "pkg/gen/api";
 
-message RequestUsers{
+enum UserBanStatus {
+  ban_none = 0;
+  ban_available = 1;
+  ban_forbidden = 2;
+}
+
+message RequestUsers {
   // @gotags: validate:"required,gt=0"
   uint32 page = 1; // 页码
   // @gotags: validate:"required,gt=0,lte=100"
   uint32 page_size = 2; // 每页数量
   string username = 3;
   string email = 4;
+  UserBanStatus ban = 5;
 }
 
-message User{
+message User {
   // required
   uint32 id = 1; // 主键ID
   string username = 2; // 用户名
@@ -23,14 +32,14 @@ message User{
   bool ban = 6; // 账号是否禁用
 }
 
-message ResponseUsers{
+message ResponseUsers {
   uint32 page = 1;
   uint32 page_size = 2;
   uint32 total = 3;
   repeated User data_list = 4;
 }
 
-service user_service{
+service user_service {
   // @Summary: 获取用户列表 @url:/v1/users/
-  rpc GetUsers(RequestUsers) returns (ResponseUsers);
+  rpc GetUsers (RequestUsers) returns (ResponseUsers);
 }
