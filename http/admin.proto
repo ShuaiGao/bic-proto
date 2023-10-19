@@ -79,13 +79,21 @@ message ResponseGetRole {
   repeated RouteNode route_list = 11;
 }
 
+enum MenuItemType {
+  MenuItemType_none = 0;
+  MenuItemType_folder = 1;
+  MenuItemType_document = 2;
+}
+
 message MenuItem {
   // required
   string id = 1;
   // required
   string label = 2;
-  repeated MenuPageItem items = 3;
-  repeated MenuItem children = 4;
+  // required
+  MenuItemType menu_item_type = 3;
+  repeated MenuPageAction items = 4;
+  repeated MenuItem children = 5;
 }
 
 message HttpMethod {
@@ -96,7 +104,7 @@ message HttpMethod {
   string note = 3;
 }
 
-message MenuPageItem {
+message MenuPageAction {
   // required
   string id = 1;
   string label = 2;
@@ -105,6 +113,14 @@ message MenuPageItem {
 
 message ResponseGetMenus {
   repeated MenuItem route_list = 1;
+}
+
+message RequestPostMenuPageAction {
+  // required
+  string id = 1;
+  // required
+  string label = 2;
+  repeated HttpMethod methods = 3; // 对应http接口
 }
 
 service admin_service {
@@ -116,4 +132,6 @@ service admin_service {
   rpc GetRole (http.Empty) returns (ResponseGetRole);
   // @Summary: 获取菜单列表 @url:/v1/menus/
   rpc GetMenus (http.Empty) returns (ResponseGetMenus);
+  // @Summary: 添加菜单页面行为 @url:/v1/menu/page/action/
+  rpc PostMenuPageAction (RequestPostMenuPageAction) returns (http.Empty);
 }
