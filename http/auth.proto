@@ -28,7 +28,7 @@ message RequestRefreshToken{
 }
 
 service auth_service{
-  // @Summary: 获取用户列表 @url:/v1/auth/
+  // @Summary: 登录 @url:/v1/auth
   rpc PostAuth(RequestAuth) returns (ResponseAuth);
   // @Summary: 刷新token @url:/v1/token/refresh
   rpc PostRefreshToken(RequestRefreshToken) returns (ResponseAuth);

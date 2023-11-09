@@ -19,6 +19,7 @@ message RouteItem {
   string name = 3;
   string key = 4;
   repeated RouteItem children = 5;
+  repeated string actions = 6;
 }
 
 message ResponseRoute {
@@ -117,21 +118,21 @@ message ResponseGetMenus {
 
 message RequestPostMenuPageAction {
   // required
-  string id = 1;
+  string key = 1;
   // required
   string label = 2;
   repeated HttpMethod methods = 3; // 对应http接口
 }
 
 service admin_service {
-  // @Summary: 获取路由 @url:/v1/routes/
+  // @Summary: 获取路由 @url:/v1/routes
   rpc GetRoutes (http.Empty) returns (ResponseRoute);
-  // @Summary: 获取角色列表 @url:/v1/roles/
+  // @Summary: 获取角色列表 @url:/v1/roles
   rpc GetRoles (http.Empty) returns (ResponseRoles);
-  // @Summary: 获取角色详情 @url:/v1/role/<uint:id>/
+  // @Summary: 获取角色详情 @url:/v1/role/<uint:id>
   rpc GetRole (http.Empty) returns (ResponseGetRole);
-  // @Summary: 获取菜单列表 @url:/v1/menus/
+  // @Summary: 获取菜单列表 @url:/v1/menus
   rpc GetMenus (http.Empty) returns (ResponseGetMenus);
-  // @Summary: 添加菜单页面行为 @url:/v1/menu/page/action/
+  // @Summary: 添加菜单页面行为 @url:/v1/menu/<string:key>/action
   rpc PostMenuPageAction (RequestPostMenuPageAction) returns (http.Empty);
 }

@@ -40,6 +40,6 @@ message ResponseUsers {
 }
 
 service user_service {
-  // @Summary: 获取用户列表 @url:/v1/users/
+  // @Summary: 获取用户列表 @url:/v1/users
   rpc GetUsers (RequestUsers) returns (ResponseUsers);
 }
