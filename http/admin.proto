@@ -86,7 +86,7 @@ enum MenuItemType {
   MenuItemType_document = 2;
 }
 
-message MenuItem {
+message ItemMenu{
   // required
   string id = 1;
   // required
@@ -94,7 +94,7 @@ message MenuItem {
   // required
   MenuItemType menu_item_type = 3;
   repeated MenuPageAction items = 4;
-  repeated MenuItem children = 5;
+  repeated ItemMenu children = 5;
 }
 
 message HttpMethod {
@@ -113,10 +113,18 @@ message MenuPageAction {
 }
 
 message ResponseGetMenus {
-  repeated MenuItem route_list = 1;
+  repeated ItemMenu route_list = 1;
 }
 
-message RequestPostMenuPageAction {
+message RequestPostMenuAction {
+  // required
+  string key = 1;
+  // required
+  string label = 2;
+  repeated string apis = 3; // 对应api key列表
+}
+
+message RequestPatchMenuPageAction {
   // required
   string key = 1;
   // required
@@ -124,7 +132,47 @@ message RequestPostMenuPageAction {
   repeated HttpMethod methods = 3; // 对应http接口
 }
 
+message ApiItem {
+  // required
+  string key = 1;
+  // required
+  string url = 2;
+  // required
+  string method = 3;
+  // required
+  string label = 4;
+}
+
+message ResponseApis{
+  repeated ApiItem api_list = 1;
+}
+
+message ItemApi{
+  // required
+  string Key = 1;
+  // required
+  string Url = 2;
+  // required
+  string Method = 3;
+  // required
+  string Label = 4;
+}
+
+message ItemMenuAction {
+  // required
+  string key = 1;
+  // required
+  string label = 2;
+  repeated ItemApi Api_list = 3; // 对应http接口
+}
+
+message ResponseGetMenuAction{
+  repeated ItemMenuAction action_list = 3;
+}
+
 service admin_service {
+  // @Summary: 获取接口列表 @url:/v1/apis
+  rpc GetApis (http.Empty) returns (ResponseApis);
   // @Summary: 获取路由 @url:/v1/routes
   rpc GetRoutes (http.Empty) returns (ResponseRoute);
   // @Summary: 获取角色列表 @url:/v1/roles
@@ -133,6 +181,10 @@ service admin_service {
   rpc GetRole (http.Empty) returns (ResponseGetRole);
   // @Summary: 获取菜单列表 @url:/v1/menus
   rpc GetMenus (http.Empty) returns (ResponseGetMenus);
+  // @Summary: 获取菜单 @url:/v1/menu/<string:key>/action
+  rpc GetMenuAction (http.Empty) returns (ResponseGetMenuAction);
   // @Summary: 添加菜单页面行为 @url:/v1/menu/<string:key>/action
-  rpc PostMenuPageAction (RequestPostMenuPageAction) returns (http.Empty);
+  rpc PostMenuAction (RequestPostMenuAction) returns (http.Empty);
+  // @Summary: 修改菜单页面行为 @url:/v1/menu/action
+  rpc PatchMenuAction (RequestPostMenuAction) returns (http.Empty);
 }

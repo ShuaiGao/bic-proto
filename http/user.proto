@@ -3,6 +3,7 @@ syntax = "proto3";
 package http;
 
 option go_package = "pkg/gen/api";
+import "http/common.proto";
 
 enum UserBanStatus {
   ban_none = 0;
@@ -39,7 +40,13 @@ message ResponseUsers {
   repeated User data_list = 4;
 }
 
+message RequestPatchPermission{
+  uint32 role_id = 1;
+}
+
 service user_service {
   // @Summary: 获取用户列表 @url:/v1/users
   rpc GetUsers (RequestUsers) returns (ResponseUsers);
+  // @Summary: 修改用户权限 @url:/v1/user/<uint:id>
+  rpc PatchUserPermission (RequestPatchPermission) returns (http.Empty);
 }
